@@ -12,11 +12,9 @@ const todoFilename = ".todo.json"
 
 func main() {
 	// parse cli commands
-	task := flag.String("task", "", )
-
 	task := flag.String("task", "", "Task to be included in the ToDo list.")
 	list := flag.Bool("list", false, "List the items in ToDo list.")
-	complete := flag.Int("complete", , "Index of item to be marked complete.")
+	complete := flag.Int("complete", 0, "Index of item to be marked complete.")
 
 	flag.Parse()
 
@@ -34,20 +32,20 @@ func main() {
 				fmt.Println(item.Task)
 			}
 		}
-	case *complete:
+	case *complete > 0:
 		if err := l.Complete(*complete); err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
 		if err := l.Save(todoFilename); err != nil {
-			fmt.Println(os.Stderr, err)
+			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
-	case *task:
+	case *task != "":
 		l.Add(*task)
 
 		if err := l.Save(todoFilename); err != nil {
-			fmt.Println(os.Stderr, err)
+			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
 	default:
