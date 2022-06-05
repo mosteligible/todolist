@@ -86,19 +86,47 @@ func TestTodoCLI(t *testing.T) {
 			t.Fatalf("%s", err)
 		}
 
-		listCmd := exec.Command(cmdPath, "-list")
-		todoItemsOut, err := listCmd.CombinedOutput()
+		todoItems, err := listTodoItems(cmdPath)
 		if err != nil {
 			t.Fatalf("%s", err)
 		}
-
-		// Note: the task added during `AddTask` is first one in the list of tasks, so first listed tasks will be it
-		todoList := string(todoItemsOut)
-		todoItems := strings.Split(todoList, "\n")
 		for _, item := range todoItems {
 			if item == tasks[0] {
 				t.Fatalf("The task \"%s\" should not be complete", tasks[0])
 			}
 		}
 	})
+
+	t.Run("DeleteTask", func(t *testing.T) {
+		tasks := []string{
+			"   0: task number 1", "   1: task 01", "   2: task 02",
+		}
+		cmdDel := exec.Command(cmdPath, "-del", "1")
+		if err := cmdDel.Run(); err != nil {
+			t.Fatalf("%s", err)
+		}
+
+		todoItems, err := listTodoItems(cmdPath)
+		if err != nil {
+			t.Fatalf("%s", err)
+		}
+
+		if todoItems[1] != tasks[2] {
+			t.Fatalf("Expected %s, instead got: %s", tasks[2], todoItems[1])
+		}
+	})
+}
+
+func listTodoItems(cmdPath string) ([]string, error) {
+	listCmd := exec.Command(cmdPath, "-list")
+	todoItems := []string{}
+	todoItemsOut, err := listCmd.CombinedOutput()
+	if err != nil {
+		return todoItems, err
+	}
+
+	// Note: the task added during `AddTask` is first one in the list of tasks, so first listed tasks will be it
+	todoList := string(todoItemsOut)
+	todoItems = strings.Split(todoList, "\n")
+	return todoItems, nil
 }
