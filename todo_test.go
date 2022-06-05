@@ -4,7 +4,7 @@ import (
 	"io/ioutil"
 	"os"
 	"testing"
-	
+
 	"github.com/mosteligible/todolist"
 )
 
@@ -85,7 +85,7 @@ func TestSaveGet(t *testing.T) {
 	}
 	defer os.Remove(tempFile.Name())
 
-	if err := l1.Save(tempFile.Name());err != nil {
+	if err := l1.Save(tempFile.Name()); err != nil {
 		t.Fatalf("Error saving list to file: %s", err)
 	}
 

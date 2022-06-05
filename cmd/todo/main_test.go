@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	binName = "todo"
+	binName  = "todo"
 	fileName = ".todo.json"
 )
 
@@ -31,7 +31,7 @@ func TestMain(m *testing.M) {
 	fmt.Println("Running tests...")
 
 	result := m.Run()
-	
+
 	fmt.Println("Cleaning up....")
 	os.Remove(binName)
 	os.Remove(fileName)
@@ -40,7 +40,7 @@ func TestMain(m *testing.M) {
 
 func TestTodoCLI(t *testing.T) {
 	task := "task number 1"
-	
+
 	dir, err := os.Getwd()
 	if err != nil {
 		t.Fatalf("%s", err)
@@ -56,7 +56,6 @@ func TestTodoCLI(t *testing.T) {
 			t.Fatalf("%s", err)
 		}
 	})
-
 
 	t.Run("ListTasks", func(t *testing.T) {
 		cmd := exec.Command(cmdPath, "-list")
