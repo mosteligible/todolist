@@ -8,17 +8,13 @@ import (
 	"github.com/mosteligible/todolist"
 )
 
-var todoFilename = ".todo.json"
+const todoFilename = ".todo.json"
 
 func main() {
-	if os.Getenv("TODO_FILENAME") != "" {
-		todoFilename = os.Getenv("TODO_FILENAME")
-	}
 	// parse cli commands
 	task := flag.String("task", "", "Task to be included in the ToDo list.")
 	list := flag.Bool("list", false, "List the items in ToDo list.")
 	complete := flag.Int("complete", 0, "Index of item to be marked complete.")
-	delete := flag.Int("del", 0, "Index of item to be deleted.")
 
 	flag.Parse()
 
@@ -43,13 +39,6 @@ func main() {
 		}
 	case *task != "":
 		l.Add(*task)
-
-		if err := l.Save(todoFilename); err != nil {
-			fmt.Fprintln(os.Stderr, err)
-			os.Exit(1)
-		}
-	case *delete > 0:
-		l.Delete(*delete)
 
 		if err := l.Save(todoFilename); err != nil {
 			fmt.Fprintln(os.Stderr, err)
